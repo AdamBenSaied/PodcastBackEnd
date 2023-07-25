@@ -1,6 +1,7 @@
-package com.example.demo.auth;
+package com.example.demo.service;
 
 
+import com.example.demo.auth.AuthenticationResponse;
 import com.example.demo.configuration.JwtService;
 import com.example.demo.model.VO.InventaireVO;
 import com.example.demo.model.VO.TokenType;
@@ -46,7 +47,7 @@ public class AuthenticationService {
     }
 
 
-    AuthenticationResponse register(UserWVO userWVO) {
+    public AuthenticationResponse register(UserWVO userWVO) {
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
 
         InventaireVO inventaireVO = new InventaireVO();
@@ -74,7 +75,7 @@ public class AuthenticationService {
         tokenRepository.saveAndFlush(token);
     }
 
-    AuthenticationResponse login(UserWVO userWVO) {
+    public AuthenticationResponse login(UserWVO userWVO) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -105,7 +106,7 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    void refreshToken(
+    public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException, java.io.IOException {

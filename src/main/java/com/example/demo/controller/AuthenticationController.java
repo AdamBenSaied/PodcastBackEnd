@@ -1,7 +1,9 @@
-package com.example.demo.auth;
+package com.example.demo.controller;
 
 
+import com.example.demo.auth.AuthenticationResponse;
 import com.example.demo.model.WVO.UserWVO;
+import com.example.demo.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,17 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping(AUTH_REGISTER)
+    @PostMapping(path = AUTH_REGISTER)
     public ResponseEntity<AuthenticationResponse> register(@RequestBody UserWVO userWVO) {
 
         return ResponseEntity.ok(authenticationService.register(userWVO));
     }
 
-    @PostMapping(AUTH_LOGIN)
+    @PostMapping(path = AUTH_LOGIN)
     public ResponseEntity<AuthenticationResponse> login(@RequestBody UserWVO userWVO) {
         return ResponseEntity.ok(authenticationService.login(userWVO));
     }
-    @PostMapping("/refresh-token")
+    @PostMapping(path = REFRESH_TOKEN)
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response

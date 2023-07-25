@@ -22,6 +22,7 @@ public class ENDPOINTS {
     public static final String AUTH_ENDPOINT = "auth";
     public static final String AUTH_REGISTER = "register";
     public static final String AUTH_LOGIN = "login";
+    public static final String REFRESH_TOKEN = "Refresh_Token";
 
 
 
