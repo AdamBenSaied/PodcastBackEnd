@@ -31,7 +31,7 @@ public class PodcastController {
 
     @GetMapping(path = PODCAST_GET_BY_USER)
     public List<PodcastWVO> getUserPodcasts(@RequestParam(USER_ID) Long userId) {
-        return podcastService.getUserPodcasts(userId);
+        return podcastService.getCreatorPodcasts(userId);
     }
 
     @GetMapping(path = PODCAST_GET_BY_NAME)
@@ -50,13 +50,13 @@ public class PodcastController {
     }
 
     @GetMapping(path = PODCAST_UNBOUGHT)
-    public List<PodcastWVO> getUnboughtPodcasts(@RequestParam(USER_ID) Long userId) {
-        return podcastService.getUnboughtPodcasts(userId);
+    public List<PodcastWVO> getUnboughtPodcasts() {
+        return podcastService.getUnboughtPodcasts();
 
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = PODCAST_POST_NEW_PODCAST)
+    @GetMapping(path = PODCAST_POST_NEW_PODCAST)
     public void newPodcast(@Valid @RequestBody PodcastWVO podcastWVO) {
         podcastService.addNewPodcast(podcastWVO);
 

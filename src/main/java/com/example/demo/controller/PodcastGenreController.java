@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.demo.constants.ENDPOINTS.PODCAST_ENDPOINT;
-import static com.example.demo.constants.ENDPOINTS.PODCAST_GET_BY_GENRE;
+import static com.example.demo.constants.ENDPOINTS.*;
 import static com.example.demo.constants.PARAMS.GENRE_NAME;
+import static com.example.demo.constants.PARAMS.PODCAST_ID;
 
 @RestController
 @RequestMapping(path = PODCAST_ENDPOINT)
@@ -35,6 +35,11 @@ public class PodcastGenreController {
         return podcastGenreService.getPodcastsByGenre(genreName);
     }
 
+    @GetMapping(path =GENRE_BY_PODCAST )
+    public List <PodcastGenreWVO> getGenreByPodcastId (@RequestParam(PODCAST_ID) Long podcastId)
+    {
+        return podcastGenreService.getGenreByPodcastId(podcastId);
+    }
 
 
 }

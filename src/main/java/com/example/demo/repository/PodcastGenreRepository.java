@@ -14,6 +14,8 @@ public interface PodcastGenreRepository extends JpaRepository<PodcastGenreVO, Lo
 
     List<PodcastGenreVO> findByGenreVO_Name(String genreName);
 
+    List<PodcastGenreVO> findByPodcastVO_Id(Long podcastId);
+
     PodcastGenreVO findByGenreVO_IdGenre(Long id);
 
 }

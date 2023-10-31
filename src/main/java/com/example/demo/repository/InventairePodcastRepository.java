@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface InventairePodcastRepository extends JpaRepository<InventairePodcastVO,Long> {
 
-   List<InventairePodcastVO> findById_InventaireVO_UserVO_Id(Long userId);
+   List<InventairePodcastVO> findById_InventaireVO_UserVO_Mail(String userMail);
 
 }

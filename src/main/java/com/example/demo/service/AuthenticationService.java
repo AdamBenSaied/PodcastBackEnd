@@ -17,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,6 +61,7 @@ public class AuthenticationService {
                 userWVO.getSurname(),
                 passwordEncoder.encode(userWVO.getPassword()),
                 userWVO.getDob(),
+                "Default",
                 inventaireVO);
 
         var savedUser = userRepository.saveAndFlush(userVO);
@@ -75,8 +78,12 @@ public class AuthenticationService {
         tokenRepository.saveAndFlush(token);
     }
 
-    public AuthenticationResponse login(UserWVO userWVO) {
+
+    public ResponseEntity<AuthenticationResponse> login(UserWVO userWVO) {
         try {
+
+
+
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userWVO.getMail(),
@@ -85,6 +92,10 @@ public class AuthenticationService {
             );
         } catch (Exception exception) {
             exception.printStackTrace();
+            return new ResponseEntity<>
+                    (new AuthenticationResponse(null,
+                            null, "Invalid email or password"), HttpStatus.UNAUTHORIZED);
+
         }
         var userVO = userRepository.findByMail(userWVO.getMail()).orElseThrow();
         var jwToken = jwtService.generateToken(userVO);
@@ -92,7 +103,7 @@ public class AuthenticationService {
 
         revokeAllUserTokens(userVO);
         saveUserToken(userVO, jwToken);
-        return new AuthenticationResponse(jwToken, refreshToken);
+        return new ResponseEntity<>(new AuthenticationResponse(jwToken, refreshToken), HttpStatus.OK);
     }
 
     private void revokeAllUserTokens(UserVO user) {

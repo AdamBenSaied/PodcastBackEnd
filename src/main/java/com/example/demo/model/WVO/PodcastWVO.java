@@ -1,13 +1,12 @@
 package com.example.demo.model.WVO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,45 +15,47 @@ public class PodcastWVO implements Serializable {
     @NotBlank
     private String name;
 
+    private float price;
+
+    private String url;
+
     @Future
     private LocalDateTime startdate;
 
     private LocalDateTime createdDate;
 
+
     @JsonProperty("creator")
     private UserWVO userWVO;
 
+
     @JsonProperty("podcastGenre")
-    private List<PodcastGenreWVO> podcastGenreWVOS ;
+    private List<PodcastGenreWVO> podcastGenreWVOS;
 
 
     public PodcastWVO() {
         //Default
     }
 
-    public PodcastWVO(String name, LocalDateTime startdate, LocalDateTime createdDate, UserWVO userWVO) {
+    public PodcastWVO(@NotBlank String name, float price, String url,
+                      @Future LocalDateTime startdate, LocalDateTime createdDate, UserWVO userWVO) {
         this.name = name;
+        this.price = price;
+        this.url = url;
         this.startdate = startdate;
         this.createdDate = createdDate;
         this.userWVO = userWVO;
     }
 
-
-    public PodcastWVO(String name, LocalDateTime startdate, LocalDateTime createdDate) {
+    public PodcastWVO(@NotBlank String name, float price, String url, @Future LocalDateTime startdate,
+                      LocalDateTime createdDate, UserWVO userWVO, List<PodcastGenreWVO> podcastGenreWVOS) {
         this.name = name;
-        this.startdate = startdate;
-        this.createdDate = createdDate;
-    }
-
-    public PodcastWVO(String name, LocalDateTime startdate, LocalDateTime createdDate, UserWVO userWVO, List<PodcastGenreWVO> podcastGenreWVOS) {
-        this.name = name;
+        this.price = price;
+        this.url = url;
         this.startdate = startdate;
         this.createdDate = createdDate;
         this.userWVO = userWVO;
         this.podcastGenreWVOS = podcastGenreWVOS;
-    }
-
-    public PodcastWVO(PodcastWVO podcastWVO) {
     }
 
     public String getName() {
@@ -81,6 +82,22 @@ public class PodcastWVO implements Serializable {
         this.createdDate = createdDate;
     }
 
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public UserWVO getUserWVO() {
         return userWVO;
     }
@@ -96,6 +113,7 @@ public class PodcastWVO implements Serializable {
     public void setPodcastGenreWVOS(List<PodcastGenreWVO> podcastGenreWVOS) {
         this.podcastGenreWVOS = podcastGenreWVOS;
     }
+
 
     @Override
     public boolean equals(Object o) {

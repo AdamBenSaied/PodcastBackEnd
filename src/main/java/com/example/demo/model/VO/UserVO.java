@@ -41,6 +41,9 @@ public class UserVO implements UserDetails {
     @Column(name = "ISADMIN")
     private boolean isAdmin;
 
+    @Column(name = "PROFILEPHOTO")
+    private String prophilePhoto;
+
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_INVENTAIRE", referencedColumnName = "ID")
@@ -52,16 +55,8 @@ public class UserVO implements UserDetails {
     @Transient
     private boolean IsLegal;
 
-    public UserVO(String pseudoname, String mail, String name, String surname, String password, LocalDate dob) {
-        this.pseudoname = pseudoname;
-        this.mail = mail;
-        this.name = name;
-        this.surname = surname;
-        this.password = password;
-        this.dob = dob;
-    }
-
-    public UserVO(String pseudoname, String mail, String name, String surname, String password, LocalDate dob, InventaireVO inventaireVO) {
+    public UserVO(String pseudoname, String mail, String name, String surname, String password,
+                  LocalDate dob, InventaireVO inventaireVO) {
         this.pseudoname = pseudoname;
         this.mail = mail;
         this.name = name;
@@ -71,7 +66,16 @@ public class UserVO implements UserDetails {
         this.inventaireVO = inventaireVO;
     }
 
-    public UserVO(String pseudoname, String mail, String name, String surname, Integer age, LocalDate dob) {
+    public UserVO(String pseudoname, String mail, String name, String surname, String password,
+                  LocalDate dob, String prophilePhoto, InventaireVO inventaireVO) {
+        this.pseudoname = pseudoname;
+        this.mail = mail;
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.dob = dob;
+        this.prophilePhoto = prophilePhoto;
+        this.inventaireVO = inventaireVO;
     }
 
     public UserVO() {
@@ -117,6 +121,10 @@ public class UserVO implements UserDetails {
         return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
+    public String getProphilePhoto() {
+        return prophilePhoto;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -152,6 +160,10 @@ public class UserVO implements UserDetails {
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+
+    public void setProphilePhoto(String prophilePhoto) {
+        this.prophilePhoto = prophilePhoto;
     }
 
     public void setAdmin(boolean admin) {

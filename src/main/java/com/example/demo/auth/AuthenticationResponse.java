@@ -6,7 +6,7 @@ import java.util.Objects;
 public class AuthenticationResponse {
     private String accessToken;
     private String refreshToken;
-
+    private String response;
     public AuthenticationResponse(String jwToken) {
     }
 
@@ -43,8 +43,23 @@ public class AuthenticationResponse {
     public AuthenticationResponse() {
     }
 
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
+    }
+
+    public AuthenticationResponse(String accessToken, String refreshToken, String response) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.response = response;
+    }
+
     public AuthenticationResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
 }

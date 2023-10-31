@@ -33,7 +33,7 @@ public class PodcastService {
 
     private final UserRepository userRepository;
 
-    private final PodcastGenreRepository podcastGenreRepository;
+    private final PodcastGenreService podcastGenreService;
 
     private final GenreRepository genreRepository;
 
@@ -42,12 +42,12 @@ public class PodcastService {
     @Lazy
     @Autowired
     public PodcastService(PodcastRepository podcastRepository, UserService userService,
-                          UserRepository userRepository, PodcastGenreRepository podcastGenreRepository,
+                          UserRepository userRepository, PodcastGenreService podcastGenreService,
                           GenreRepository genreRepository, InventairePodcastService inventairePodcastService) {
         this.podcastRepository = podcastRepository;
         this.userService = userService;
         this.userRepository = userRepository;
-        this.podcastGenreRepository = podcastGenreRepository;
+        this.podcastGenreService = podcastGenreService;
         this.genreRepository = genreRepository;
         this.inventairePodcastService = inventairePodcastService;
 
@@ -58,8 +58,11 @@ public class PodcastService {
 
         UserWVO userWVO = userService.getUserInfosById(podcastVO.get().getUserVO().getId());
 
-        PodcastWVO podcastWVO = new PodcastWVO(podcastVO.get().getName(), podcastVO.get().getStartdate(),
-                podcastVO.get().getCreatedDate(), userWVO);
+        List<PodcastGenreWVO> podcastGenreWVO = podcastGenreService.getGenreByPodcastId(podcastId);
+
+        PodcastWVO podcastWVO = new PodcastWVO(podcastVO.get().getName(), podcastVO.get().getPrice(),
+                podcastVO.get().getUrl(), podcastVO.get().getStartdate(),
+                podcastVO.get().getCreatedDate(), userWVO, podcastGenreWVO);
 
         return podcastWVO;
 
@@ -72,17 +75,18 @@ public class PodcastService {
 
             PodcastWVO podcastWVO = getPodcastById(podcastVO.getId());
             podcastWVOList.add(podcastWVO);
+
         });
         return podcastWVOList;
     }
 
-    public List<PodcastWVO> getUserPodcasts(Long userId) {
+    public List<PodcastWVO> getCreatorPodcasts(Long userId) {
         List<PodcastVO> podcastVOList = podcastRepository.findByUserVO_Id(userId);
         List<PodcastWVO> podcastWVOList = new ArrayList<>();
         podcastVOList.forEach(podcastVO -> {
 
-            PodcastWVO podcastWVO = new PodcastWVO(podcastVO.getName(),
-                    podcastVO.getStartdate(), podcastVO.getCreatedDate(), userService.getUserInfosById(userId));
+            PodcastWVO podcastWVO = getPodcastById(podcastVO.getId());
+
             podcastWVOList.add(podcastWVO);
         });
         return podcastWVOList;
@@ -93,8 +97,8 @@ public class PodcastService {
         List<PodcastVO> podcastVOList = podcastRepository.findByName(podcastName);
         List<PodcastWVO> podcastWVOList = new ArrayList<>();
         podcastVOList.forEach(podcastVO -> {
-            PodcastWVO podcastWVO = new PodcastWVO(podcastVO.getName(),
-                    podcastVO.getStartdate(), podcastVO.getCreatedDate(), userService.getUserInfosById(podcastVO.getUserVO().getId()));
+            PodcastWVO podcastWVO = getPodcastById(podcastVO.getId());
+
             podcastWVOList.add(podcastWVO);
         });
         return podcastWVOList;
@@ -104,22 +108,17 @@ public class PodcastService {
 
     public void addNewPodcast(PodcastWVO podcastWVO) {
 
+
         PodcastVO podcastVO = new PodcastVO(podcastWVO.getName(), podcastWVO.getStartdate(),
-                LocalDateTime.now(), userRepository.findUserVOById(podcastWVO.getUserWVO().getId()));
+                LocalDateTime.now(), podcastWVO.getPrice(), podcastWVO.getUrl(),
+                userRepository.findUserVOById(userService.getActiveUserInfos().getId()));
 
         podcastRepository.saveAndFlush(podcastVO);
 
         List<PodcastGenreWVO> podcastGenreWVOS = podcastWVO.getPodcastGenreWVOS();
-        //  List<PodcastGenreVO> podcastGenreVOS = new ArrayList<>();
         podcastGenreWVOS.forEach(podcastGenreWVO -> {
             GenreVO genreVO = genreRepository.findByIdGenre(podcastGenreWVO.getGenreWVO().getId());
-           /* GenreVO genreVO = new GenreVO(podcastGenreWVO.getGenreWVO().getName(),
-                    podcastGenreWVO.getGenreWVO().getDescription(),
-                    podcastGenreWVO.getGenreWVO().isKidFriendly());*/
-
-            PodcastGenreVO podcastGenreVO = new PodcastGenreVO(podcastVO, genreVO);
-
-            podcastGenreRepository.saveAndFlush(podcastGenreVO);
+            podcastGenreService.addNewPodcastGenre(podcastVO, genreVO);
         });
 
     }
@@ -139,10 +138,10 @@ public class PodcastService {
     }
 
 
-    public List<PodcastWVO> getUnboughtPodcasts(Long userId) {
+    public List<PodcastWVO> getUnboughtPodcasts() {
         List<PodcastWVO> upcomingPodcasts = getUpcomingPodcasts();
         List<PodcastWVO> unboughtPodcasts = new ArrayList<>();
-        List<InventairePodcastWVO> usersboughtPodcasts = inventairePodcastService.getInventoryByUserId(userId);
+        List<InventairePodcastWVO> usersboughtPodcasts = inventairePodcastService.getActiveUserPodcasts();
 
         upcomingPodcasts.forEach(podcastWVO -> {
 

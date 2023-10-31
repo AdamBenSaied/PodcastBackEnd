@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.example.demo.constants.ENDPOINTS.INVENTAIRE_ALL;
-import static com.example.demo.constants.ENDPOINTS.INVENTAIRE_ENDPOINT;
+import static com.example.demo.constants.ENDPOINTS.*;
 
 @RestController
 @RequestMapping(INVENTAIRE_ENDPOINT)

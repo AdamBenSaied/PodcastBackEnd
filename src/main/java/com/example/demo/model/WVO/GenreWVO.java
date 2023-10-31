@@ -1,9 +1,12 @@
 package com.example.demo.model.WVO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 
 public class GenreWVO implements Serializable {
 
+    @JsonIgnore
     private Long id;
     private String name;
     private String description;

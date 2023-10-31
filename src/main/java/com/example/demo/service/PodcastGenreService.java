@@ -42,13 +42,35 @@ public class PodcastGenreService {
 
             GenreWVO genreWVO = genreService.getGenreById(podcastGenreVO.getGenreVO().getIdGenre());
 
-            UserWVO userWVO = userService.getUserInfosById(podcastGenreVO.getPodcastVO().getUserVO().getId());
+//            UserWVO userWVO = userService.getUserInfosById(podcastGenreVO.getPodcastVO().getUserVO().getId());
 
             PodcastWVO podcastWVO = podcastService.getPodcastById(podcastGenreVO.getPodcastVO().getId());
 
             PodcastGenreWVO podcastGenreWVO = new PodcastGenreWVO(podcastWVO, genreWVO);
             podcastGenreWVOList.add(podcastGenreWVO);
         });
+        return podcastGenreWVOList;
+    }
+
+    public void addNewPodcastGenre(PodcastVO podcastVO, GenreVO genreVO) {
+
+        PodcastGenreVO podcastGenreVO = new PodcastGenreVO(podcastVO, genreVO);
+
+        podcastGenreRepository.saveAndFlush(podcastGenreVO);
+
+    }
+
+    public List<PodcastGenreWVO> getGenreByPodcastId(Long podcastId) {
+
+        List<PodcastGenreVO> podcastGenreVOList = podcastGenreRepository.findByPodcastVO_Id(podcastId);
+        List<PodcastGenreWVO> podcastGenreWVOList = new ArrayList<>();
+
+        podcastGenreVOList.forEach(podcastGenreVO -> {
+            GenreWVO genreWVO = genreService.getGenreById(podcastGenreVO.getGenreVO().getIdGenre());
+            PodcastGenreWVO podcastGenreWVO = new PodcastGenreWVO(genreWVO);
+            podcastGenreWVOList.add(podcastGenreWVO);
+        });
+
         return podcastGenreWVOList;
     }
 

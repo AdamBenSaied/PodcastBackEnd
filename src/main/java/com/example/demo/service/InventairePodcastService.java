@@ -27,26 +27,24 @@ public class InventairePodcastService {
         this.podcastService = podcastService;
     }
 
-    public List<InventairePodcastWVO> getInventoryByUserId(Long userId) {
-        List<InventairePodcastVO> inventairePodcastVOList = inventairePodcastRepository.findById_InventaireVO_UserVO_Id(userId);
+    public List<InventairePodcastWVO> getInventoryByUserMail(String userMail) {
+        List<InventairePodcastVO> inventairePodcastVOList = inventairePodcastRepository.findById_InventaireVO_UserVO_Mail(userMail);
         List<InventairePodcastWVO> inventairePodcastWVOList = new ArrayList<>();
         inventairePodcastVOList.forEach(inventairePodcastVO -> {
 
-            UserWVO userInventoryOwnerWVO = userService.getUserInfosById
-                    (inventairePodcastVO.getId().getInventaireVO().getUserVO().getId());
-
-            InventaireWVO inventaireWVO = new InventaireWVO(inventairePodcastVO.getId().getInventaireVO().getId(), userInventoryOwnerWVO);
-
-          //  UserWVO userCreatorWVO = userService.getUserInfosById(inventairePodcastVO.getId().getPodcastVO().getUserVO().getId());
-
-
             PodcastWVO podcastWVO = podcastService.getPodcastById(inventairePodcastVO.getId().getPodcastVO().getId());
 
-            InventairePodcastWVO inventairePodcastWVO = new InventairePodcastWVO(inventaireWVO, podcastWVO);
+            InventairePodcastWVO inventairePodcastWVO = new InventairePodcastWVO(podcastWVO);
             inventairePodcastWVOList.add(inventairePodcastWVO);
         });
 
         return inventairePodcastWVOList;
+    }
+
+    public List<InventairePodcastWVO> getActiveUserPodcasts() {
+
+        return getInventoryByUserMail(userService.getActiveUserInfos().getMail());
+
     }
 
 

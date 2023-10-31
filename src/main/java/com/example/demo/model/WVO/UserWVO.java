@@ -1,5 +1,8 @@
 package com.example.demo.model.WVO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -9,9 +12,17 @@ public class UserWVO implements Serializable {
     private String mail;
     private String name;
     private String surname;
+    private String profilePhoto;
     private Integer age;
     private LocalDate dob;
+
+
+    @JsonIgnore
     private Long id;
+
+    //    @JsonIgnore
+    // THIS JSON INCLUDE tkhalli l'password mayarja3esh ki yabda valeur mte3ou NULL !
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String password;
 
     public UserWVO() {
@@ -26,13 +37,12 @@ public class UserWVO implements Serializable {
         this.surname = surname;
     }
 
-    public UserWVO(String pseudoname, String mail, String name, String surname, LocalDate dob, String password) {
+    public UserWVO(String pseudoname, String mail, String name, String surname, LocalDate dob) {
         this.pseudoname = pseudoname;
         this.mail = mail;
         this.name = name;
         this.surname = surname;
         this.dob = dob;
-        this.password = password;
     }
 
     public UserWVO(String pseudoname, String mail, String name, String surname) {
@@ -42,13 +52,22 @@ public class UserWVO implements Serializable {
         this.surname = surname;
     }
 
-    public UserWVO(String pseudoname, String mail, String name, String surname, Integer age, LocalDate dob) {
+    public UserWVO(String pseudoname, String mail, String name, String surname, Integer age, LocalDate dob,String profilePhoto) {
         this.pseudoname = pseudoname;
         this.mail = mail;
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.dob = dob;
+        this.profilePhoto=profilePhoto;
+    }
+
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
     }
 
     public Integer getAge() {
